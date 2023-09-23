@@ -1,10 +1,29 @@
-# Apollo Cache Cheat Sheet
+**Apollo Cache Cheat Sheet**
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+- [Context](#context)
+    - [Code](#code)
+    - [Schema](#schema)
+    - [Data Sample](#data-sample)
+- [How Apollo Caches Requests](#how-apollo-caches-requests)
+    - [Initializing Cache](#initializing-cache)
+    - [Query Caching](#query-caching)
+- [Viewing Cache](#viewing-cache)
+    - [Cache Normalization](#cache-normalization)
+- [Adding Items to the Cache](#adding-items-to-the-cache)
+    - [Method 1: Using `writeQuery` or `updateQuery`](#method-1-using-writequery-or-updatequery)
+    - [Method 2: Using `cache.modify`](#method-2-using-cachemodify)
+- [Handling Parameterized Queries](#handling-parameterized-queries)
+- [Deleting Cache Items](#deleting-cache-items)
+<!-- TOC end -->
 
-# Context:
+
+
+
+# Context
 
 This cheat sheet covers the most common use cases for managing Cache in Apollo Client, using a book library app as an example.
 
-### **Code:**
+### Code
 
 Checkout the repo or playground to see how I used the concepts in this guide:
 
@@ -17,7 +36,7 @@ Checkout the repo or playground to see how I used the concepts in this guide:
     - [Apollo Server (Github)](https://github.com/mujuni88/apollo-server-books)
     - [Codesandbox](https://codesandbox.io/s/apollo-server-book-js-h25j89)
 
-### **Schema**
+### Schema
 
 ```graphql
   enum Category {
@@ -50,7 +69,7 @@ Checkout the repo or playground to see how I used the concepts in this guide:
 
 ```
 
-### **Data Sample**
+### Data Sample
 
 ```jsx
 const books = [
@@ -65,7 +84,7 @@ const books = [
 
 # How Apollo Caches Requests
 
-### ****Initializing Cache****
+### Initializing Cache
 
 Initialize your Apollo client with `InMemoryCache`.
 
@@ -78,7 +97,7 @@ const client = new ApolloClient({
 });
 ```
 
-### **Query Caching**
+### Query Caching
 
 When you query a book for the first time, Apollo initiates a network request. 
 
@@ -88,14 +107,14 @@ All subsequent requests of the same type will hit the cache
 
 ![Excalidraw.png](assets/request-cache.png)
 
-# ****Viewing Cache****
+# Viewing Cache
 
 To view the cache, use:
 
 - `window.__APOLLO_CLIENT__.cache.extract()` in your browser console
 - [Download Apollo Client Devtools](https://www.apollographql.com/docs/react/development-testing/developer-tooling/#apollo-client-devtools)
 
-### Cache Normalization:
+### Cache Normalization
 
 By default, cache identifiers have the format `<__typename>:<id>`. For example, if you're querying a `Book` with an id of `harry-potter`, the cache would store it as `"Book:harry-potter"`.
 
@@ -125,9 +144,9 @@ By default, cache identifiers have the format `<__typename>:<id>`. For example, 
 }
 ```
 
-# ****Adding Items to the Cache****
+# Adding Items to the Cache
 
-### ****Method 1: Using `writeQuery` or `updateQuery`**
+### Method 1: Using `writeQuery` or `updateQuery`
 
 **Long Way: Using readQuery and writeQuery**
 
@@ -164,7 +183,7 @@ const [addBook] = useMutation(
 
 ```
 
-### Method 2. Using `cache.modify`:
+### Method 2: Using `cache.modify`
 
 **Long way:**
 
@@ -221,7 +240,7 @@ Difference between `toReference` and `writeFragment`
 
 The `toReference` function returns a reference to a cache object that already exists, while `writeFragment` writes an object to the cache and then returns its reference. It is important to remember that any results returned by mutations or queries are first cached before being returned to the client. This is why `toReference` works.
 
-# ****Handling Parameterized Queries****
+# Handling Parameterized Queries
 
 Handling pagination or filters/sorts can be done by parsing the `storeFieldName` provided in your field function.
 
@@ -342,7 +361,7 @@ const [addBook, { data }] = useMutation(ADD_BOOK, {
 });
 ```
 
-# ****Deleting Cache Items:****
+# Deleting Cache Items
 
 Best way to delete cache items. Note: `cache.evict` and `cache.gc`
 
