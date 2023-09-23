@@ -1,4 +1,4 @@
-**Apollo Cache Cheat Sheet**
+# Apollo Cache Cheat Sheet
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 - [Context](#context)
     - [Code](#code)
