@@ -188,52 +188,48 @@ const [addBook] = useMutation(
 **Long way:**
 
 ```jsx
-const [mutate] = useMutation(
-    ADD_BOOK,
-    {
-      update (cache, { data }) {
-        const newBook = data?.addBook;
-     
-        cache.modify({
-					fields: {
-						books(prevBooks, {toReference}){
-							const newBookRef = cache.writeFragment({
-                    data: newBook,
-                    fragment: gql`
-                        fragment NewBook on Book {
-                            id
-                            title
-                        }
-                    `
-                });
-							return [...prevBooks, newBookRef]
-						}
-					}
-				});
-      }
-    }
-  )
+const [mutate] = useMutation(ADD_BOOK, {
+  update(cache, { data }) {
+    const newBook = data?.addBook;
+
+    cache.modify({
+      fields: {
+        books(prevBooks) {
+          const newBookRef = cache.writeFragment({
+            data: newBook,
+            fragment: gql`
+              fragment NewBook on Book {
+                id
+                title
+              }
+            `,
+          });
+          return [...prevBooks, newBookRef];
+        },
+      },
+    });
+  },
+});
+
 ```
 
 **Simpler way**
 
 ```jsx
-const [mutate] = useMutation(
-    ADD_BOOK,
-    {
-      update (cache, { data }) {
-        const newBook = data?.addBook;
-     
-        cache.modify({
-					fields: {
-						books(prevBooks, {toReference}){
-							return [...prevBooks, toReference(newBook)]
-						}
-					}
-				});
-      }
-    }
-  )
+const [mutate] = useMutation(ADD_BOOK, {
+  update(cache, { data }) {
+    const newBook = data?.addBook;
+
+    cache.modify({
+      fields: {
+        books(prevBooks, { toReference }) {
+          return [...prevBooks, toReference(newBook)];
+        },
+      },
+    });
+  },
+});
+
 ```
 
 Difference between `toReference` and `writeFragment`
